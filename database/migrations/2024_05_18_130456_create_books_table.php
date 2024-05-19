@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('books', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('book_src_id');
+            $table->id('book_id');
+            $table->foreignId('book_src_id')->constrained('users');
             $table->string('book_type')->default('CUSTOMER');
             $table->timestamps();
         });

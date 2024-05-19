@@ -11,7 +11,7 @@ class BookSummary extends Model
 
     protected $table = 'book_summary';
 
-    protected $fillable = ['book_id','bs_balance','bs_date'];
+    protected $fillable = ['bs_balance','bs_date'];
 
     public function book(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
