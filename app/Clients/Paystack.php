@@ -2,13 +2,17 @@
 
 namespace App\Clients;
 
+use App\Contracts\PaymentClient;
 use Exception;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class Paystack
+class Paystack extends PaymentClient
 {
+    protected PendingRequest $client;
+
     public function __construct()
     {
         $this->client = Http::withToken('secret_key')->baseUrl('https://api.paystack.co');
@@ -17,14 +21,14 @@ class Paystack
     /**
      * Initialize a transaction
      *
-     * @param array $data
+     * @param array $payload
      * @return mixed
      * @throws HttpException
      */
-    public function initializeTransaction(array $data): mixed
+    public function initializeTransaction(array $payload): mixed
     {
         try {
-            return $this->client->post('/transaction/initialize', $data)
+            return $this->client->post('/transaction/initialize', $payload)
                 ->throw()
                 ->json();
         } catch (Exception $exception) {

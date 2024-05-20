@@ -3,12 +3,15 @@
 namespace App\Clients;
 
 use Exception;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Flutterwave
 {
+    protected PendingRequest $client;
+
     public function __construct()
     {
         $this->client = Http::withToken('secret_key')->baseUrl('https://api.flutterwave.com/v3');
