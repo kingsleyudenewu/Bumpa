@@ -14,7 +14,7 @@ class FlutterwaveProcessor extends WebhookProcessor
     {
     }
 
-    public function createWebhookLog(): WebhookLog
+    public function createWebhookLog()
     {
         WebhookLog::add(ProviderEnum::FLUTTERWAVE->value, $this->request, $this->request->input('data.meta.tx_ref'));
     }

@@ -9,9 +9,8 @@ abstract class WebhookProcessor
     /**
      * Create webhook log
      *
-     * @return WebhookLog
      */
-    abstract public function createWebhookLog(): WebhookLog;
+    abstract public function createWebhookLog();
 
     /**
      * Determine whether webhook request should be processed or not

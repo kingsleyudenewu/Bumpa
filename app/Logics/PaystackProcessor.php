@@ -15,7 +15,7 @@ class PaystackProcessor extends WebhookProcessor
     {
     }
 
-    public function createWebhookLog(): WebhookLog
+    public function createWebhookLog()
     {
         WebhookLog::add(ProviderEnum::PAYSTACK->value, $this->request, $this->request->input('data.metadata.tx_ref'));
     }
