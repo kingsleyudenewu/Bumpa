@@ -3,8 +3,10 @@
 namespace App\Clients;
 
 use App\Contracts\PaymentClient;
+use App\Enums\ProviderEnum;
 use Exception;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -27,10 +29,26 @@ class Paystack extends PaymentClient
      */
     public function initializeTransaction(array $payload): mixed
     {
+        $payload = [
+            'email' => auth()->user()->email,
+            'amount' => $payload['amount'] * 100,
+            'metadata' => [
+                'user_ref' => auth()->user()->code,
+                'provider' => ProviderEnum::PAYSTACK
+            ]
+        ];
+
         try {
-            return $this->client->post('/transaction/initialize', $payload)
+            $response = $this->client->post('/transaction/initialize', $payload)
                 ->throw()
                 ->json();
+
+            if (!Arr::get($response, 'status', false)) {
+                abort(Response::HTTP_BAD_REQUEST, Arr::get($response, 'message'));
+            }
+
+            return Arr::get($response, 'data.authorization_url');
+
         } catch (Exception $exception) {
             throw new HttpException(Response::HTTP_SERVICE_UNAVAILABLE, $exception->getMessage());
         }
@@ -46,9 +64,16 @@ class Paystack extends PaymentClient
     public function verifyTransaction(string $reference): mixed
     {
         try {
-            return $this->client->get("/transaction/verify/{$reference}")
+            $response =  $this->client->get("/transaction/verify/{$reference}")
                 ->throw()
                 ->json();
+
+            if (!Arr::get($response, 'status', false)) {
+                abort(Response::HTTP_BAD_REQUEST, Arr::get($response, 'message'));
+            }
+
+            return Arr::get($response, 'data');
+
         } catch (Exception $exception) {
             throw new HttpException(Response::HTTP_SERVICE_UNAVAILABLE, $exception->getMessage());
         }

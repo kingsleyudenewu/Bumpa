@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,9 +29,13 @@ Route::group(['prefix' => 'auth'], function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('wallet')->group(function () {
         Route::get('/balance', [WalletController::class, 'getWalletsBalance'])->name('wallet.balance');
-        Route::get('/transfer', [WalletController::class, 'walletTransfer'])
+        Route::post('/transfer', [WalletController::class, 'walletTransfer'])
             ->name('wallet.transfer')
             ->middleware('auth.transaction');
+        Route::post('/fund-account', [WalletController::class, 'fundWallet'])
+            ->name('wallet.transfer');
     });
+
+    Route::get('transactions', [TransactionController::class, 'getTransactions'])->name('transactions');
 
 });

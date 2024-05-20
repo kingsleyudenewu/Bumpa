@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Enums\BookEnum;
 use App\Models\Book;
 use App\Models\BookSummary;
 use App\Models\Tx;
@@ -15,7 +16,7 @@ class AccountingService
     public function postLedger(array $transactionLegs)
     {
         $txID = addslashes($transactionLegs[0]['tx']); //transaction code from first params
-        if (empty($txID)) $txID = (string) Str::uuid();
+        if (empty($txID)) $txID = Str::uuid()->toString();
         $saved_book_ids = $saved_coa_ids = [];
 
         $getTx = Tx::where('tx_code', $txID)->get();
@@ -27,7 +28,6 @@ class AccountingService
 
         DB::beginTransaction();
         try {
-            $success = true;
             $bookInfo = [];
 
             foreach ($transactionLegs as $params) {
@@ -36,30 +36,22 @@ class AccountingService
                 (empty($params['value_date'])) ? $params['tx_value_date'] = date('Y-m-d') : $params['tx_value_date'] = date('Y-m-d', strtotime($params['value_date']));
                 (empty($params['payment_date'])) ? $params['tx_payment_date'] = date('Y-m-d') : $params['tx_payment_date'] = date('Y-m-d', strtotime($params['payment_date']));
 
-                $txLedger = new Tx;
-                $txLedger->tx_book_id = stripslashes($params['book_id']);
-                $txLedger->tx_date = $params['payment_date'];
-                $txLedger->tx_value_date = $params['value_date'];
-                $txLedger->tx_amount = $params['amount'];
-                $txLedger->tx_remarks = $params['memo'];
-                $txLedger->tx_code = $txID;
+                Tx::create([
+                    'tx_book_id' => stripslashes($params['book_id']),
+                    'tx_date' => $params['payment_date'],
+                    'tx_value_date' => $params['value_date'],
+                    'tx_amount' => $params['amount'],
+                    'tx_remarks' => $params['memo'],
+                    'tx_code' => $txID,
+                ]);
 
-                if ($txLedger->save()) {
-                    $saved_book_ids[] = $params['book_id'];
-                    $bookInfo[] = [$params['book_id'], $txID, $params['amount'], $params['payment_date'], $params['value_date']];
-                } else {
-                    $success = false;
-                }
+                $saved_book_ids[] = $params['book_id'];
+                $bookInfo[] = [$params['book_id'], $txID, $params['amount'], $params['payment_date'], $params['value_date']];
             }
 
-            if ($success === true) {
-                $this->updateBookBalance($bookInfo);
-                DB::commit();
-                return true;
-            } else {
-                DB::rollBack();
-                return false;
-            }
+            $this->updateBookBalance($bookInfo);
+            DB::commit();
+            return true;
         } catch (Exception $exception) {
             DB::rollBack();
             logger($exception->getMessage());
@@ -82,7 +74,7 @@ class AccountingService
             $bookType = $book->book_type;
 
             $acceptable_types = [];
-            $acceptable_types[] = 'CUSTOMER';
+            $acceptable_types[] = BookEnum::CUSTOMER;
 
             if (!in_array($bookType, $acceptable_types)) {
                 continue;

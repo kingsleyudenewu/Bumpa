@@ -83,7 +83,7 @@ class LedgerService
      * @param string|null $reference
      * @return array
      */
-    public function accountFundingLedger(float $amount, string $reference, int $userId, string $book_type)
+    public function accountFundingLedger(float $amount, string $reference, int $userId, string $book_type): array
     {
         $accountFundingLedgerId = Ledger::where(['ledger_name' => LedgerEnum::ACCOUNT_FUNDING])->value('ledger_id');
         $accountFundingBookId = Book::where([
