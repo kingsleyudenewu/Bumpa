@@ -18,7 +18,7 @@ class AuthController extends Controller
      * @param RegisterAction $action
      * @return JsonResponse
      */
-    public function register(RegisterRequest $request, RegisterAction $action)
+    public function register(RegisterRequest $request, RegisterAction $action): JsonResponse
     {
         $action->execute($request->only(['name', 'email', 'password']));
 
@@ -41,5 +41,17 @@ class AuthController extends Controller
         $generateToken = $action->execute($request->validated());
 
         return $this->successResponse('User Logged In Successfully', $generateToken);
+    }
+
+    /**
+     * Logout a user from the blog system
+     *
+     * @return JsonResponse
+     */
+    public function logout(): JsonResponse
+    {
+        request()->user()->tokens()->delete();
+
+        return $this->successResponse('User Logged Out Successfully');
     }
 }

@@ -45,7 +45,7 @@ trait HasApiResponse
      * Set the server error response.
      *
      * @param $message
-     * @param HttpException $exception
+     * @param HttpException|null $exception
      *
      * @return JsonResponse
      */

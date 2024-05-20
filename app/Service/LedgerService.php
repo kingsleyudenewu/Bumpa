@@ -45,29 +45,24 @@ class LedgerService
     /**
      * Perform wallet to wallet transfer between customers
      *
-     * @param int $fromUserId
-     * @param int $toUserId
+     * @param User $fromUser
+     * @param User $toUser
      * @param mixed $amount
      * @return void
      */
-    public function walletToWalletTransferLedger(int $fromUserId, int $toUserId, int $amount)
+    public function walletToWalletTransfer(User $fromUser, User $toUser, int $amount)
     {
-        return DB::transaction(function () use ($fromUserId, $toUserId, $amount) {
-            $fromWallet = User::find($fromUserId);
-            $toWallet = User::find($toUserId);
+        return DB::transaction(function () use ($fromUser, $toUser, $amount) {
 
-            $fromBookId = '';
-            $toBookId = '';
-
-            $fromBookId = Book::where('book_src_id', $fromWallet->id)
+            $fromBookId = Book::where('book_src_id', $fromUser->id)
                 ->where('book_type', BookEnum::CUSTOMER)
                 ->value('book_id');
 
-            $toBookId = Book::where('book_src_id', $toWallet->id)
+            $toBookId = Book::where('book_src_id', $toUser->id)
                 ->where('book_type', BookEnum::CUSTOMER)
                 ->value('book_id');
 
-            if (is_null($toWallet) || is_null($fromWallet)) {
+            if (is_null($toUser) || is_null($fromUser)) {
                 abort(400, "Wallet transfer not successful");
             }
 
