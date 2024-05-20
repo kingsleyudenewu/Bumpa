@@ -21,17 +21,17 @@ class LedgerService
      */
     public function deductBankTransfer(int $userId, int $deductionAmount, $reversal = false)
     {
-        $withdrawalLedgerId = Ledger::where(['ledger_name' => LedgerEnum::WITHDRAWAL])->value('ledger_id');
+        $withdrawalLedgerId = Ledger::where(['ledger_name' => LedgerEnum::WITHDRAWAL->value])->value('ledger_id');
 
         $iWithdrawalBookId = Book::where([
             'book_src_id' => $withdrawalLedgerId,
-            'book_type' => BookEnum::LEDGER
+            'book_type' => BookEnum::LEDGER->value
         ])
             ->value('book_id');
 
         $customerBookId = Book::where([
             'book_src_id' => $userId,
-            'book_type' => BookEnum::CUSTOMER
+            'book_type' => BookEnum::CUSTOMER->value
         ])
             ->value('book_id');
 
@@ -55,11 +55,11 @@ class LedgerService
         return DB::transaction(function () use ($fromUser, $toUser, $amount) {
 
             $fromBookId = Book::where('book_src_id', $fromUser->id)
-                ->where('book_type', BookEnum::CUSTOMER)
+                ->where('book_type', BookEnum::CUSTOMER->value)
                 ->value('book_id');
 
             $toBookId = Book::where('book_src_id', $toUser->id)
-                ->where('book_type', BookEnum::CUSTOMER)
+                ->where('book_type', BookEnum::CUSTOMER->value)
                 ->value('book_id');
 
             if (is_null($toUser) || is_null($fromUser)) {
@@ -85,10 +85,10 @@ class LedgerService
      */
     public function accountFundingLedger(float $amount, string $reference, int $userId, string $book_type): array
     {
-        $accountFundingLedgerId = Ledger::where(['ledger_name' => LedgerEnum::ACCOUNT_FUNDING])->value('ledger_id');
+        $accountFundingLedgerId = Ledger::where(['ledger_name' => LedgerEnum::ACCOUNT_FUNDING->value])->value('ledger_id');
         $accountFundingBookId = Book::where([
             'book_src_id' => $accountFundingLedgerId,
-            'book_type' => BookEnum::LEDGER
+            'book_type' => BookEnum::LEDGER->value
         ])
             ->value('book_id');
 

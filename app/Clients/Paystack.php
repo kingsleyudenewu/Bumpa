@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -34,7 +35,8 @@ class Paystack extends PaymentClient
             'amount' => $payload['amount'] * 100,
             'metadata' => [
                 'user_ref' => auth()->user()->code,
-                'provider' => ProviderEnum::PAYSTACK
+                'provider' => ProviderEnum::PAYSTACK->value,
+                'tx_ref' => Str::uuid()->toString(),
             ]
         ];
 

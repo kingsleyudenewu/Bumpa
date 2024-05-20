@@ -25,7 +25,7 @@ class WalletTransferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => 'required',
+            'amount' => ['required', 'integer', 'min:100', 'max:1000000'],
             'email' => ['required', 'exists:users,email'],
         ];
     }
@@ -35,7 +35,7 @@ class WalletTransferRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        $balance = $this->user()->userBalance(BookEnum::CUSTOMER);
+        $balance = $this->user()->userBalance(BookEnum::CUSTOMER->value);
 
         if ((float) $balance < (float) $this->amount) {
             abort(Response::HTTP_BAD_REQUEST, "Insufficient balance in your wallet");

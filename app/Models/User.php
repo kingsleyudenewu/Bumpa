@@ -101,7 +101,7 @@ class User extends Authenticatable
     public function transactionHistory(): \Illuminate\Database\Eloquent\Collection|array
     {
         return Tx::with('book')
-            ->whereHas('book', fn ($q) => $q->where('book_src_id', auth()->id())->where('book_type', BookEnum::CUSTOMER))
+            ->whereHas('book', fn ($q) => $q->where('book_src_id', auth()->id())->where('book_type', BookEnum::CUSTOMER->value))
             ->orderBy('created_at', 'desc')
             ->get()
             ->mapInto(WalletHistoryResource::class);

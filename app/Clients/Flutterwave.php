@@ -89,7 +89,7 @@ class Flutterwave extends PaymentClient
             ],
             'meta' => [
                 'user_ref' => auth()->user()->code,
-                'provider' => ProviderEnum::FLUTTERWAVE
+                'provider' => ProviderEnum::FLUTTERWAVE->value
             ]
         ];
     }

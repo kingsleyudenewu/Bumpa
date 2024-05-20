@@ -74,7 +74,7 @@ class AccountingService
             $bookType = $book->book_type;
 
             $acceptable_types = [];
-            $acceptable_types[] = BookEnum::CUSTOMER;
+            $acceptable_types[] = BookEnum::CUSTOMER->value;
 
             if (!in_array($bookType, $acceptable_types)) {
                 continue;

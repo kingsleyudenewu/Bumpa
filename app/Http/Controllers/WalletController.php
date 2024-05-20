@@ -23,7 +23,7 @@ class WalletController extends Controller
         $user = $request->user();
 
         return $this->successResponse('Account balance retrieved successfully.', [
-            'balance' => $user->userBalance(BookEnum::CUSTOMER),
+            'balance' => $user->userBalance(BookEnum::CUSTOMER->value),
         ]);
     }
 
