@@ -11,7 +11,7 @@ class Book extends Model
 
     protected $primaryKey = 'book_id';
 
-    protected $guarded = [];
+    protected $guarded = ['book_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

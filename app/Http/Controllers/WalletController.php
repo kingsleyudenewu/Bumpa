@@ -18,7 +18,7 @@ class WalletController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWalletsBalance(Request $request): \Illuminate\Http\JsonResponse
+    public function getWalletsBalance(Request $request)
     {
         $user = $request->user();
 

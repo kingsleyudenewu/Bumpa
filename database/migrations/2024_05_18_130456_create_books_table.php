@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\BookEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id('book_id');
-            $table->foreignId('book_src_id')->constrained('users');
-            $table->string('book_type')->default('CUSTOMER');
+            $table->unsignedBigInteger('book_src_id');
+            $table->string('book_type')->default(BookEnum::CUSTOMER->value);
             $table->timestamps();
         });
     }

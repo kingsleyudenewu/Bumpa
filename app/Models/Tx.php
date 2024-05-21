@@ -13,6 +13,6 @@ class Tx extends Model
 
     public function book(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Book::class);
+        return $this->belongsTo(Book::class, 'tx_book_id', 'book_id');
     }
 }

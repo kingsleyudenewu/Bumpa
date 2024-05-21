@@ -8,7 +8,7 @@ class LoginAction
 {
     public function execute(array $data)
     {
-        $user = User::where('email', $data['name'])->first();
+        $user = User::where('email', $data['email'])->first();
 
         return (new GenerateTokenAction())->execute($user);
     }

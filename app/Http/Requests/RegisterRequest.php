@@ -12,7 +12,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,7 @@ class RegisterRequest extends FormRequest
         return [
             'name' => ['required'],
             'email' => ['required','email','unique:users,email'],
+            'pin' => ['required','digits:6'],
             'password' => [
                 'required',
                 Password::min(6)

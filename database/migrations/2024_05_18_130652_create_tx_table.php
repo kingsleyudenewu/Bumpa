@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('txs', function (Blueprint $table) {
+        Schema::create('tx', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tx_book_id')->constrained('books');
+            $table->foreignId('tx_book_id')->constrained('books','book_id');
             $table->date('tx_date');
             $table->date('tx_value_date');
             $table->decimal('tx_amount',40,6);
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('txes');
+        Schema::dropIfExists('tx');
     }
 };

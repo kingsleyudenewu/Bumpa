@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FlutterwaveWebhookController;
+use App\Http\Controllers\PaystackWebhookController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Http\Request;
@@ -22,8 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'auth'], function () {
-    Route::post('login', [AuthController::class, 'authenticate'])->name('login');
-    Route::get('logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
+    Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+    Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -34,8 +37,11 @@ Route::middleware('auth:sanctum')->group(function () {
             ->middleware('auth.transaction');
         Route::post('/fund-account', [WalletController::class, 'fundWallet'])
             ->name('wallet.transfer');
+        Route::get('transactions', [TransactionController::class, 'getTransactions'])->name('transactions');
     });
+});
 
-    Route::get('transactions', [TransactionController::class, 'getTransactions'])->name('transactions');
-
+Route::group(['prefix' => 'webhook'], function () {
+    Route::post('/flutterwave', [FlutterwaveWebhookController::class])->name('flutterwave.webhook');
+    Route::post('/paystack', [PaystackWebhookController::class])->name('paystack.webhook');
 });

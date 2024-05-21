@@ -21,7 +21,7 @@ class LedgerService
      */
     public function deductBankTransfer(int $userId, int $deductionAmount, $reversal = false)
     {
-        $withdrawalLedgerId = Ledger::where(['ledger_name' => LedgerEnum::WITHDRAWAL->value])->value('ledger_id');
+        $withdrawalLedgerId = Ledger::where(['ledger_name' => LedgerEnum::WITHDRAWAL->value])->value('id');
 
         $iWithdrawalBookId = Book::where([
             'book_src_id' => $withdrawalLedgerId,
@@ -76,16 +76,15 @@ class LedgerService
 
     /**
      * Fund user wallet through account funding on Paystack or FLutterwave
-     * @param int $amount
-     * @param int $deductBookId
-     * @param int $creditBookId
-     * @param string $description
-     * @param string|null $reference
-     * @return array
+     * @param float $amount
+     * @param string $reference
+     * @param int $userId
+     * @param string $book_type
+     * @return bool
      */
-    public function accountFundingLedger(float $amount, string $reference, int $userId, string $book_type): array
+    public function accountFundingLedger(float $amount, string $reference, int $userId, string $book_type): bool
     {
-        $accountFundingLedgerId = Ledger::where(['ledger_name' => LedgerEnum::ACCOUNT_FUNDING->value])->value('ledger_id');
+        $accountFundingLedgerId = Ledger::where(['ledger_name' => LedgerEnum::ACCOUNT_FUNDING->value])->value('id');
         $accountFundingBookId = Book::where([
             'book_src_id' => $accountFundingLedgerId,
             'book_type' => BookEnum::LEDGER->value

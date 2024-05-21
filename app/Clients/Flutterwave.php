@@ -18,7 +18,7 @@ class Flutterwave extends PaymentClient
 
     public function __construct()
     {
-        $this->client = Http::withToken('secret_key')->baseUrl('https://api.flutterwave.com/v3');
+        $this->client = Http::withToken(config('flutterwave.secret_key'))->baseUrl(config('flutterwave.payment_url'));
     }
 
     /**

@@ -3,7 +3,13 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Enums\BookEnum;
+use App\Models\Book;
+use App\Models\User;
+use App\Service\LedgerService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +18,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+         User::factory(10)->create()
+             ->each(fn($user) => Book::factory()->create([
+                 'book_src_id' => $user->id,
+                 'book_type' => BookEnum::CUSTOMER->value
+             ])->each(fn($book) => resolve(LedgerService::class)->accountFundingLedger(
+                     1000,
+                     Str::uuid()->toString(),
+                     $user->id,
+                     BookEnum::CUSTOMER->value
+             )));
     }
 }

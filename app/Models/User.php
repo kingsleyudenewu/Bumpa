@@ -26,6 +26,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'code',
+        'pin',
     ];
 
     /**
@@ -47,6 +49,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'pin' => 'hashed',
     ];
 
     /**
@@ -78,7 +81,7 @@ class User extends Authenticatable
     /**
      * @return HasOne
      */
-    public function books(string $type): HasOne
+    public function books(string $type)
     {
         return $this->hasOne(Book::class,'book_src_id', 'id')
             ->where('book_type', $type)
@@ -87,9 +90,9 @@ class User extends Authenticatable
 
     /**
      * @param string $type
-     * @return float|int
+     * @return int
      */
-    public function userBalance(string $type): float|int
+    public function userBalance(string $type)
     {
         $book =  $this->books($type);
         $book_id = $book->book_id;
@@ -98,7 +101,7 @@ class User extends Authenticatable
         return -1*$totalBalance;
     }
 
-    public function transactionHistory(): \Illuminate\Database\Eloquent\Collection|array
+    public function transactionHistory()
     {
         return Tx::with('book')
             ->whereHas('book', fn ($q) => $q->where('book_src_id', auth()->id())->where('book_type', BookEnum::CUSTOMER->value))

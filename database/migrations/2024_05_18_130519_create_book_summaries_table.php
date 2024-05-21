@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('book_summary', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bs_book_id')->constrained('books');
+            $table->foreignId('bs_book_id')->constrained('books','book_id');
             $table->decimal('bs_balance',40,6);
             $table->date('bs_date');
             $table->timestamps();

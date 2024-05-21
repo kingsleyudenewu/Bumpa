@@ -18,7 +18,7 @@ class Paystack extends PaymentClient
 
     public function __construct()
     {
-        $this->client = Http::withToken('secret_key')->baseUrl('https://api.paystack.co');
+        $this->client = Http::withToken(config('paystack.secret_key'))->baseUrl(config('paystack.payment_url'));
     }
 
     /**

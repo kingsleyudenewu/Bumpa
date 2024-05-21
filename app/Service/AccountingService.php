@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class AccountingService
 {
-    public function postLedger(array $transactionLegs)
+    public function postLedger(array $transactionLegs): bool
     {
         $txID = addslashes($transactionLegs[0]['tx']); //transaction code from first params
         if (empty($txID)) $txID = Str::uuid()->toString();
