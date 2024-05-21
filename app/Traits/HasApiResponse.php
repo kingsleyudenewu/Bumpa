@@ -3,12 +3,12 @@
 namespace App\Traits;
 
 use Exception;
-use HttpException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as StatusResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 trait HasApiResponse
 {

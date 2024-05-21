@@ -43,7 +43,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/banks', [WithdrawalController::class, 'getBanks'])->name('withdraw.bank');
     Route::get('/bank/accounts', [WithdrawalController::class, 'getAllBankAccounts'])->name('bank.account');
-    Route::post('/verify-bank-account', [WithdrawalController::class, 'verifyBankAccount'])->name('withdraw.verify.account');
-    Route::post('/create-recipient', [WithdrawalController::class, 'createRecipient'])->name('withdraw.create.recipient');
-    Route::post('/initiate-transfer', [WithdrawalController::class, 'initiateTransfer'])->name('withdraw.initiate.transfer');
+    Route::post('/verify-bank-account', [WithdrawalController::class, 'verifyBankAccount'])
+        ->name('withdraw.verify.account')
+        ->middleware('auth.transaction');
+    Route::post('/create-recipient', [WithdrawalController::class, 'createRecipient'])
+        ->name('withdraw.create.recipient')
+        ->middleware('auth.transaction');
+    Route::post('/initiate-transfer', [WithdrawalController::class, 'initiateTransfer'])
+        ->name('withdraw.initiate.transfer')
+        ->middleware('auth.transaction');
 });

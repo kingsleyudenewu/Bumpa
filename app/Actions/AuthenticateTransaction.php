@@ -4,21 +4,22 @@ namespace App\Actions;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as StatusResponse;
+
 
 class AuthenticateTransaction
 {
     public function execute(Request $request)
     {
         if (! $request->filled('user_pin') || ! is_string($request->user_pin)) {
-            abort_if(Response::HTTP_BAD_REQUEST, 'Your transaction pin is required to be passed as part of the request payload with the parameter `user_pin`');
+            abort(StatusResponse::HTTP_BAD_REQUEST, 'Your transaction pin is required to be passed as part of the request payload with the parameter `user_pin`');
         }
 
         if ($this->validatePin($request, $request->user())) {
             return;
         }
 
-        abort(Response::HTTP_BAD_REQUEST, 'Could not authenticate transaction');
+        abort(StatusResponse::HTTP_BAD_REQUEST, 'Could not authenticate transaction');
     }
 
     /**
