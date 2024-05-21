@@ -22,7 +22,7 @@ A payment solution for GetBumpa to enable users store funds in their wallet, rec
 - Generate your laravel key : ```php artisan key:generate```
 - Run ```php artisan migrate```
 - Run ```php artisan db:seed``` to generate dummy data for user
-
+- Here is the url to the postman collection for the API endpoints: https://documenter.getpostman.com/view/910439/2sA3QniZvT
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
