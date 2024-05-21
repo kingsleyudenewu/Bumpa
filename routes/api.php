@@ -5,6 +5,7 @@ use App\Http\Controllers\FlutterwaveWebhookController;
 use App\Http\Controllers\PaystackWebhookController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\WithdrawalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,9 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
             ->name('wallet.transfer');
         Route::get('transactions', [TransactionController::class, 'getTransactions'])->name('transactions');
     });
-});
 
-Route::group(['prefix' => 'webhook'], function () {
-    Route::post('/flutterwave', [FlutterwaveWebhookController::class])->name('flutterwave.webhook');
-    Route::post('/paystack', [PaystackWebhookController::class])->name('paystack.webhook');
+    Route::get('/banks', [WithdrawalController::class, 'getBanks'])->name('withdraw.bank');
+    Route::get('/bank/accounts', [WithdrawalController::class, 'getAllBankAccounts'])->name('bank.account');
+    Route::post('/verify-bank-account', [WithdrawalController::class, 'verifyBankAccount'])->name('withdraw.verify.account');
+    Route::post('/create-recipient', [WithdrawalController::class, 'createRecipient'])->name('withdraw.create.recipient');
+    Route::post('/initiate-transfer', [WithdrawalController::class, 'initiateTransfer'])->name('withdraw.initiate.transfer');
 });

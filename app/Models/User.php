@@ -89,6 +89,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bankAccounts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(UserBankAccount::class);
+    }
+
+    /**
      * @param string $type
      * @return int
      */
