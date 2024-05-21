@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\BookEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Validator;
 
 class InitiateBankTransferRequest extends FormRequest
@@ -34,6 +35,7 @@ class InitiateBankTransferRequest extends FormRequest
         $this->merge([
             'source' => 'balance',
             'reason' => 'Transfer to bank account',
+            'reference' => strtolower(Str::uuid()->toString()),
         ]);
     }
 

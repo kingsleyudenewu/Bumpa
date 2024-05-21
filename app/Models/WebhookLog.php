@@ -19,7 +19,7 @@ class WebhookLog extends Model
         return ['uuid'];
     }
 
-    public static function add(string $name, Request $payload, string $identifier): self
+    public static function add(string $name, Request $payload, string $identifier = null): self
     {
         return static::create([
             'name' => $name,

@@ -19,7 +19,7 @@ class LedgerService
      * @param  mixed $deductionAmount
      * @return void
      */
-    public function deductBankTransfer(int $userId, int $deductionAmount, $reversal = false)
+    public function deductBankTransfer(int $userId, int $deductionAmount, string $reference = null, $reversal = false)
     {
         $withdrawalLedgerId = Ledger::where(['ledger_name' => LedgerEnum::WITHDRAWAL->value])->value('id');
 
@@ -36,7 +36,7 @@ class LedgerService
             ->value('book_id');
 
         //Then we deduct amount from customer wallet and credit withdrawal ledger wallet
-        $allTX = $this->setLedgerVariables($deductionAmount, $customerBookId, $iWithdrawalBookId, 'Withdrawal deduction of '.$deductionAmount, $reversal);
+        $allTX = $this->setLedgerVariables($deductionAmount, $customerBookId, $iWithdrawalBookId, 'Withdrawal deduction of '.$deductionAmount, $reference, $reversal);
 
         //post ledger
         return resolve(AccountingService::class)->postLedger($allTX);
@@ -123,7 +123,7 @@ class LedgerService
             $params['tx'] = $reference;
             $params['book_id'] = $deductBookId;
             $params['value_date'] = $params['payment_date'] = date('Y-m-d');
-            $params['memo'] = $description;
+            $params['memo'] = 'Reverse deduction of '.$amount;
             $allTX[] = $params;
 
             // debit from ledger
@@ -131,7 +131,7 @@ class LedgerService
             $params['tx'] = $reference;
             $params['book_id'] = $creditBookId;
             $params['value_date'] = $params['payment_date'] = date('Y-m-d');
-            $params['memo'] = $description;
+            $params['memo'] = 'Reverse deduction of '.$amount;
             $allTX[] = $params;
 
             return $allTX;

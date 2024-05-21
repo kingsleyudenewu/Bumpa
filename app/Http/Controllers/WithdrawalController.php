@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CreateBankAccount;
+use App\Actions\ProcessBankTransfer;
 use App\Clients\Paystack;
 use App\Http\Requests\CreateRecipientAccountRequest;
 use App\Http\Requests\InitiateBankTransferRequest;
 use App\Http\Requests\VerifyBankAccountRequest;
 use App\Http\Resources\BankAccountResource;
+use App\Jobs\ProcessBankTransferJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -60,8 +62,14 @@ class WithdrawalController extends Controller
      */
     public function initiateTransfer(InitiateBankTransferRequest $request): \Illuminate\Http\JsonResponse
     {
-        $response = (new Paystack())->initiateTransfer($request->validated());
+        $postDeduction = (new ProcessBankTransfer())->execute($request);
 
-        return $this->successResponse('success', $response);
+        if (!$postDeduction) {
+            return $this->badRequestAlert('Bank transfer failed');
+        }
+
+        ProcessBankTransferJob::dispatch($request->validated(), auth()->user()->id);
+
+        return $this->successResponse('success', 'Bank transfer initiated');
     }
 }
