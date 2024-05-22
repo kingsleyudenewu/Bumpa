@@ -35,6 +35,19 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
+
+            $this->mapWebhookRoutes();
         });
+    }
+
+    /**
+     * Define the routes for the application.
+     */
+    protected function mapWebhookRoutes()
+    {
+        Route::prefix('webhook')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/webhook.php'));
     }
 }
