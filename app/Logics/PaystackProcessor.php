@@ -25,7 +25,7 @@ class PaystackProcessor extends WebhookProcessor
 
     public function shouldProcessRequest(): bool
     {
-        return !is_null($this->request->input('event'));
+        return !empty($this->request->input('event'));
     }
 
     public function dispatchWebhookToJob()
