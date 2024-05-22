@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BookEnum;
+use App\Events\WalletLowFunds;
 use App\Factories\PaymentFactory;
 use App\Http\Requests\FundWalletRequest;
 use App\Http\Requests\WalletTransferRequest;
@@ -37,6 +38,8 @@ class WalletController extends Controller
     public function walletTransfer(WalletTransferRequest $request): \Illuminate\Http\JsonResponse
     {
         $transfer = resolve(LedgerService::class)->walletToWalletTransfer($request->user(), $request->beneficiary, $request->amount);
+
+        WalletLowFunds::dispatchIf($request->user()->userBalance(BookEnum::CUSTOMER->value) < 1000, $request->user());
 
         return $transfer ? $this->successResponse('Transfer successful') : $this->badRequestAlert('Transfer failed');
     }
